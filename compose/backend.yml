@@ -1,0 +1,80 @@
+---
+version: '2.4'
+#only add core CCD services here. Side services should be added to others.yaml
+
+services:
+
+  am-role-assignment-service:
+    build:
+      context: .
+    image: "hmctspublic.azurecr.io/am/role-assignment-service:latest"
+    container_name: am-role-assignment-service
+    environment:
+      - ROLE_ASSIGNMENT_DB_HOST=am-shared-database
+      - ROLE_ASSIGNMENT_DB_NAME=role_assignment
+      - ROLE_ASSIGNMENT_DB_PORT=5432
+      - ROLE_ASSIGNMENT_DB_USERNAME=am
+      - ROLE_ASSIGNMENT_DB_PASSWORD=am
+      - ROLE_ASSIGNMENT_DB_OPTIONS
+      - AM_ROLE_ASSIGNMENT_SERVICE_SECRET
+      - ROLE_ASSIGNMENT_IDAM_KEY
+      - ROLE_ASSIGNMENT_TOKEN_SECRET
+      - ROLE_ASSIGNMENT_S2S_AUTHORISED_SERVICES=ccd_gw,am_role_assignment_service
+      - IDAM_USER_URL
+      - IDAM_S2S_URL
+      - AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY
+      - REFORM_SERVICE_NAME=am-role-assignment-service
+      - REFORM_TEAM=am
+      - REFORM_ENVIRONMENT=local
+    ports:
+      - 4096:4096
+    depends_on:
+      idam-api:
+        condition: service_started
+      am-shared-database:
+        condition: service_started
+    networks:
+      - am-network
+
+  service-auth-provider-api:
+    image: "hmctspublic.azurecr.io/rpe/service-auth-provider:latest"
+    healthcheck:
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    ports:
+      - 4502:8080
+    environment:
+      SERVER_PORT: 8080
+      JWT_KEY: wThK0f0/lh3FlxFcL4xUWDMI5C1J9KyQBgXV4wseh1e5J1uYJIjvTvArHxQDrYoHJ23xFxjHkOnvNbR5dXRoxA==
+      MICROSERVICEKEYS_CCD_DATA: "${IDAM_KEY_CCD_DATA_STORE}"
+      MICROSERVICEKEYS_CCD_GW: "${IDAM_KEY_CCD_GATEWAY}"
+      MICROSERVICEKEYS_AM_ROLE_ASSIGNMENT_SERVICE: "AAAAAAAAAAAAAAAA"
+      TESTING_SUPPORT_ENABLED: "true"
+    networks:
+      - am-network
+
+  am-shared-database:
+    build: ../database
+    healthcheck:
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    environment:
+      DB_USERNAME:
+      DB_PASSWORD:
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - 5050:5432
+    volumes:
+      - am-docker-am-shared-database-data:/var/lib/postgresql/data
+    networks:
+      - am-network
+
+volumes:
+  am-docker-am-shared-database-data:
+  wiremock:
+
+networks:
+  am-network:
+    external: true
