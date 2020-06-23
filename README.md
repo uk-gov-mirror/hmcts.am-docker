@@ -92,10 +92,6 @@ An oauth2 client should be configured for am-docker application, on SIDAM Web Ad
 You need to login to the SIDAM Web Admin with the URL and logic credentials here: 
 
 http://localhost:8082/login
-```
-Username: idamOwner@hmcts.net
-Password:  Ref0rmIsFun
-```
 For more details refer : https://tools.hmcts.net/confluence/x/eQP3P
 
 Navigate to Home > Manage Services > Add a new Service
