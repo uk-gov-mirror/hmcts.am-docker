@@ -1,7 +1,7 @@
 #!/bin/sh
 
-IMPORTER_USERNAME=${1:-ccd.docker.default@hmcts.net}
-IMPORTER_PASSWORD=${2:-Pa55word11}
+IMPORTER_USERNAME=auto.test.cnp@gmail.com
+IMPORTER_PASSWORD=Pa55word11
 IDAM_URI=${IDAM_STUB_LOCALHOST:-http://localhost:5000}
 REDIRECT_URI="http://localhost:4096/oauth2redirect"
 CLIENT_ID="am_docker"
