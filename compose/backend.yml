@@ -5,7 +5,7 @@ version: '2.4'
 services:
 
   am-role-assignment-service:
-    image: "hmctspublic.azurecr.io/am/role-assignment-service:pr-107"
+    image: "hmctspublic.azurecr.io/am/role-assignment-service:latest"
     container_name: am-role-assignment-service
     environment:
         ROLE_ASSIGNMENT_DB_HOST: am-shared-database
