@@ -102,6 +102,7 @@ label : am_docker
 description : am_docker
 client_id : am_docker
 client_secret : am_docker_secret
+scope : openid profile roles authorities email manage-user
 new redirect_uri (click 'Add URI' before saving) : http://localhost:4096/oauth2redirect
 ```
 ### 2. Create Idam roles
@@ -110,9 +111,6 @@ After defining the above client/service, the following roles must be defined und
 
     * am-import
     * caseworker
-    * caseworker-autotest1
-    * caseworker-autotest2
-
 
 Don't worry about the *Assignable roles* section when adding roles
 
