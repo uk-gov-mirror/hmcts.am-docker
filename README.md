@@ -102,7 +102,7 @@ label : am_docker
 description : am_docker
 client_id : am_docker
 client_secret : am_docker_secret
-scope : openid profile roles authorities email manage-user
+scope : openid profile roles authorities email search-user
 new redirect_uri (click 'Add URI' before saving) : http://localhost:4096/oauth2redirect
 ```
 ### 2. Create Idam roles
