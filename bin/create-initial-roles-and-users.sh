@@ -9,6 +9,7 @@ cd "$parent_path"
 #The following users are needed for the Functional Test Automation
 ./idam-create-caseworker.sh am-import am.docker.default@hmcts.net Pa55word11 Default AM_Docker
 ./idam-create-caseworker.sh caseworker,am-import ras.admin@hmcts.net Pa55word11 testsurname testfirstname
+./idam-create-caseworker.sh caseworker,am-import orm.admin@hmcts.net Pa55word11 testsurname testfirstname
 ./idam-create-caseworker.sh caseworker,am-import TEST_AM_USER1_BEFTA@test.local Pa55word11 testsurname testfirstname
 ./idam-create-caseworker.sh caseworker,am-import TEST_AM_USER2_BEFTA@test.local Pa55word11 testsurname testfirstname
 ./idam-create-caseworker.sh caseworker,am-import TEST_AM_USER3_BEFTA@test.local Pa55word11 testsurname testfirstname
