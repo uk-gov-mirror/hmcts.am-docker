@@ -24,7 +24,7 @@ services:
         OIDC_ISSUER_URL: http://idam-api:8080/openam/oauth2/hmcts
         IDAM_CLIENT_ID: am_docker
         IDAM_CLIENT_SECRET: am_docker_secret
-        IDAM_ADMIN_USERID: befta.caseworker.2.solicitor.2@gmail.com
+        IDAM_ADMIN_USERID: ras.admin@hmcts.net
         IDAM_ADMIN_PASSWORD: Pa55word11
         IDAM_ADMIN_SCOPE: manage-user
         AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY:
@@ -76,8 +76,8 @@ services:
       - POSTGRES_HOST_AUTH_METHOD=trust
     ports:
       - 5451:5432
-    volumes:
-      - am-docker-am-shared-database-data:/var/lib/postgresql/data
+#    volumes:
+#      - am-docker-am-shared-database-data:/var/lib/postgresql/data
     networks:
       - am-network
 

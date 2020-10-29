@@ -8,7 +8,7 @@ cd "$parent_path"
 #Case workers are being created in SIDAM
 #The following users are needed for the Functional Test Automation
 ./idam-create-caseworker.sh am-import am.docker.default@hmcts.net Pa55word11 Default AM_Docker
-./idam-create-caseworker.sh caseworker,am-import auto.test.cnp@gmail.com Pa55word11 testsurname testfirstname
-./idam-create-caseworker.sh caseworker,am-import befta.caseworker.2.solicitor.2@gmail.com Pa55word11 testsurname testfirstname
-./idam-create-caseworker.sh caseworker,am-import befta.caseworker.2.solicitor.1@gmail.com Pa55word11 testsurname testfirstname
-./idam-create-caseworker.sh caseworker,am-import befta.caseworker.2.solicitor.3@gmail.com Pa55word11 testsurname testfirstname
+./idam-create-caseworker.sh caseworker,am-import ras.admin@hmcts.net Pa55word11 testsurname testfirstname
+./idam-create-caseworker.sh caseworker,am-import TEST_AM_USER1_BEFTA@test.local Pa55word11 testsurname testfirstname
+./idam-create-caseworker.sh caseworker,am-import TEST_AM_USER2_BEFTA@test.local Pa55word11 testsurname testfirstname
+./idam-create-caseworker.sh caseworker,am-import TEST_AM_USER3_BEFTA@test.local Pa55word11 testsurname testfirstname
