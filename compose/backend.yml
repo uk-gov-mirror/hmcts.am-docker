@@ -1,6 +1,6 @@
 ---
 version: '2.4'
-#only add core CCD services here. Side services should be added to others.yaml
+#only add core AM services here. Side services should be added to others.yml
 
 services:
 
@@ -56,10 +56,11 @@ services:
     environment:
       SERVER_PORT: 8080
       JWT_KEY: wThK0f0/lh3FlxFcL4xUWDMI5C1J9KyQBgXV4wseh1e5J1uYJIjvTvArHxQDrYoHJ23xFxjHkOnvNbR5dXRoxA==
-      MICROSERVICEKEYS_CCD_DATA: "${IDAM_KEY_CCD_DATA_STORE}"
-      MICROSERVICEKEYS_CCD_GW: "${IDAM_KEY_CCD_GATEWAY}"
       MICROSERVICEKEYS_AM_ROLE_ASSIGNMENT_SERVICE: "AAAAAAAAAAAAAAAA"
       MICROSERVICEKEYS_AM_ORG_ROLE_MAPPING_SERVICE: "AAAAAAAAAAAAAAAA"
+      MICROSERVICEKEYS_CCD_DATA: "${IDAM_KEY_CCD_DATA_STORE}"
+      MICROSERVICEKEYS_CCD_GW: "${IDAM_KEY_CCD_GATEWAY}"
+      MICROSERVICEKEYS_CCD_DEFINITION: "${IDAM_KEY_CCD_DEFINITION_STORE}"
       TESTING_SUPPORT_ENABLED: "true"
     networks:
       - am-network
