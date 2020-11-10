@@ -15,8 +15,7 @@ services:
         ROLE_ASSIGNMENT_DB_PASSWORD: am
         ROLE_ASSIGNMENT_DB_OPTIONS: ?stringtype=unspecified
         AM_ROLE_ASSIGNMENT_SERVICE_SECRET: AAAAAAAAAAAAAAAA
-        ROLE_ASSIGNMENT_IDAM_KEY:
-        ROLE_ASSIGNMENT_TOKEN_SECRET:
+        LD_SDK_KEY: sdk-1be5f18b-59fd-4575-aa77-908bf0ecceab
         ROLE_ASSIGNMENT_S2S_AUTHORISED_SERVICES: ccd_gw,am_role_assignment_service
         IDAM_USER_URL: http://idam-api:5000
         IDAM_S2S_URL: http://service-auth-provider-api:8080
@@ -26,7 +25,8 @@ services:
         IDAM_CLIENT_SECRET: am_docker_secret
         IDAM_ADMIN_USERID: ras.admin@hmcts.net
         IDAM_ADMIN_PASSWORD: Pa55word11
-        IDAM_ADMIN_SCOPE: manage-user
+        IDAM_ADMIN_SCOPE: search-user
+        CCD_DATA_STORE_URL: http://ccd-data-store-api:4452
         AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY:
         REFORM_SERVICE_NAME: am-role-assignment-service
         REFORM_TEAM: am
