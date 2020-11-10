@@ -6,6 +6,7 @@ IDAM_URI=${IDAM_STUB_LOCALHOST:-http://localhost:5000}
 REDIRECT_URI="http://localhost:4096/oauth2redirect"
 CLIENT_ID="am_docker"
 CLIENT_SECRET="am_docker_secret"
+CURL_OPTS="$CURL_OPTS -S --silent"
 
 code=$(curl ${CURL_OPTS} -u "${IMPORTER_USERNAME}:${IMPORTER_PASSWORD}" -XPOST "${IDAM_URI}/oauth2/authorize?redirect_uri=${REDIRECT_URI}&response_type=code&client_id=${CLIENT_ID}" -d "" | jq -r .code)
 
