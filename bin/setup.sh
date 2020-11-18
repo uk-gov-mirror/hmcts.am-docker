@@ -21,4 +21,5 @@ echo "Setting up Users..."
 ./create-user.sh "TEST_AM_USER2_BEFTA@test.local" "testfirstname" "testsurname" "Pa55word11" "test" "[{ \"code\": \"caseworker\"}]"
 ./create-user.sh "TEST_AM_USER3_BEFTA@test.local" "testfirstname" "testsurname" "Pa55word11" "test" "[{ \"code\": \"caseworker\"}]"
 ./create-user.sh "TEST_AM_USER4_BEFTA@test.local" "testfirstname" "testsurname" "Pa55word11" "test" "[{ \"code\": \"caseworker\"}, { \"code\": \"caseworker-ia\"}]"
+./create-user.sh "TEST_AM_USER5_BEFTA@test.local" "testfirstname" "testsurname" "Pa55word11" "test" "[{ \"code\": \"caseworker\"}, { \"code\": \"caseworker-ia\"}]"
 
