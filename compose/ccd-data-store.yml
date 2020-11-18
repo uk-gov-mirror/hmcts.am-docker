@@ -1,0 +1,112 @@
+---
+version: '2.4'
+#only add core CCD services here.
+
+services:
+  ccd-user-profile-api:
+    image: "${CCD_USER_PROFILE_API_USE_LOCAL-hmctspublic.azurecr.io/}ccd/user-profile-api:${CCD_USER_PROFILE_API_TAG:-latest}"
+    environment:
+      USER_PROFILE_DB_HOST: am-shared-database
+      USER_PROFILE_DB_PORT: 5432
+      USER_PROFILE_DB_USERNAME: am
+      USER_PROFILE_DB_PASSWORD: am
+      USER_PROFILE_DB_USE_SSL: "${DB_USE_SSL}"
+      IDAM_S2S_URL: http://service-auth-provider-api:8080
+      REFORM_SERVICE_NAME: ccd-user-profile-api
+      REFORM_TEAM: ccd
+      REFORM_ENVIRONMENT: local
+      APPINSIGHTS_INSTRUMENTATIONKEY: key
+    ports:
+      - 4453:4453
+    depends_on:
+      - am-shared-database
+    networks:
+      - am-network
+
+  ccd-definition-store-api:
+    image: "${CCD_DEFINITION_STORE_API_USE_LOCAL-hmctspublic.azurecr.io/}ccd/definition-store-api:${CCD_DEFINITION_STORE_API_TAG:-latest}"
+    environment:
+      DEFINITION_STORE_DB_HOST: am-shared-database
+      DEFINITION_STORE_DB_PORT: 5432
+      DEFINITION_STORE_DB_USERNAME: am
+      DEFINITION_STORE_DB_PASSWORD: am
+      DEFINITION_STORE_DB_USE_SSL: "${DB_USE_SSL}"
+      DEFINITION_STORE_IDAM_KEY: "${IDAM_KEY_CCD_DEFINITION_STORE}"
+      DEFINITION_STORE_S2S_AUTHORISED_SERVICES: ccd_data,ccd_gw,ccd_admin,am_role_assignment_service
+      USER_PROFILE_HOST: http://ccd-user-profile-api:4453
+      IDAM_USER_URL: "${IDAM_STUB_SERVICE_NAME:-http://idam-api:5000}"
+      IDAM_S2S_URL: http://service-auth-provider-api:8080
+      REFORM_SERVICE_NAME: ccd-definition-store-api
+      REFORM_TEAM: ccd
+      REFORM_ENVIRONMENT: local
+      APPINSIGHTS_INSTRUMENTATIONKEY: key
+      ELASTIC_SEARCH_ENABLED: "${ES_ENABLED_DOCKER}"
+      ELASTIC_SEARCH_HOST: "ccd-elasticsearch"
+      ELASTIC_SEARCH_FAIL_ON_IMPORT: "true"
+      # Uncomment this line to enable JVM debugging and uncomment the port mapping below
+      # JAVA_TOOL_OPTIONS: '-XX:InitialRAMPercentage=30.0 -XX:MaxRAMPercentage=65.0 -XX:MinRAMPercentage=30.0 -XX:+UseConcMarkSweepGC -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005'
+    ports:
+      - 4451:4451
+      # Uncomment this and the JAVA_TOOL_OPTIONS flag for JVM debugging
+      # - 5005:5005
+    depends_on:
+      # Uncomment this line to enable ccd test stub service
+      #     ccd-test-stubs-service:
+      #       condition: service_started
+      idam-api:
+        condition: service_started
+      am-shared-database:
+        condition: service_started
+      ccd-user-profile-api:
+        condition: service_started
+    networks:
+      - am-network
+
+  ccd-data-store-api:
+    image: "${CCD_DATA_STORE_API_USE_LOCAL-hmctspublic.azurecr.io/}ccd/data-store-api:${CCD_DATA_STORE_API_TAG:-latest}"
+    environment:
+      DATA_STORE_DB_HOST: am-shared-database
+      DATA_STORE_DB_PORT: 5432
+      DATA_STORE_DB_USERNAME: am
+      DATA_STORE_DB_PASSWORD: am
+      DATA_STORE_DB_USE_SSL: "${DB_USE_SSL}"
+      DATA_STORE_IDAM_KEY: "${IDAM_KEY_CCD_DATA_STORE}"
+      DATA_STORE_TOKEN_SECRET: iuasbcuasdcbasdgcasdgcuysachjsacyasdgjcgasdj
+      DATA_STORE_S2S_AUTHORISED_SERVICES: ccd_gw,ccd_gateway,fpl_case_service,ccd_data,ccd_ps,aac_manage_case_assignment,am_role_assignment_service
+      DEFINITION_STORE_HOST: http://ccd-definition-store-api:4451
+      USER_PROFILE_HOST: http://ccd-user-profile-api:4453
+      IDAM_USER_URL: "${IDAM_STUB_SERVICE_NAME:-http://idam-api:5000}"
+      IDAM_S2S_URL: http://service-auth-provider-api:8080
+      REFORM_SERVICE_NAME: ccd-data-store-api
+      REFORM_TEAM: ccd
+      REFORM_ENVIRONMENT: local
+      APPINSIGHTS_INSTRUMENTATIONKEY: key
+      ELASTIC_SEARCH_ENABLED: "${ES_ENABLED_DOCKER}"
+      ELASTIC_SEARCH_HOSTS: ccd-elasticsearch:9200
+      ELASTIC_SEARCH_DATA_NODES_HOSTS: "http://ccd-elasticsearch:9200"
+      CCD_DEFAULTPRINTURL: https://return-case-doc-ccd.nonprod.platform.hmcts.net/jurisdictions/:jid/case-types/:ctid/cases/:cid
+      CCD_DM_DOMAIN: "${CCD_DM_DOMAIN}"
+      # Uncomment this line to enable JVM debugging and uncomment the port mapping below
+      # JAVA_TOOL_OPTIONS: '-XX:InitialRAMPercentage=30.0 -XX:MaxRAMPercentage=65.0 -XX:MinRAMPercentage=30.0 -XX:+UseConcMarkSweepGC -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005'
+    ports:
+      - 4452:4452
+      # Uncomment this and the JAVA_TOOL_OPTIONS flag for JVM debugging
+      # - 5005:5005
+    depends_on:
+      # Uncomment this line to enable ccd test stub service
+      #     ccd-test-stubs-service:
+      #       condition: service_started
+      idam-api:
+        condition: service_started
+      am-shared-database:
+        condition: service_started
+      ccd-user-profile-api:
+        condition: service_started
+      ccd-definition-store-api:
+        condition: service_started
+    networks:
+      - am-network
+
+networks:
+  am-network:
+    external: true

@@ -1,6 +1,6 @@
 ---
 version: '2.4'
-#only add core CCD services here. Side services should be added to others.yaml
+#only add core AM services here. Side services should be added to others.yml
 
 services:
 
@@ -15,8 +15,7 @@ services:
         ROLE_ASSIGNMENT_DB_PASSWORD: am
         ROLE_ASSIGNMENT_DB_OPTIONS: ?stringtype=unspecified
         AM_ROLE_ASSIGNMENT_SERVICE_SECRET: AAAAAAAAAAAAAAAA
-        ROLE_ASSIGNMENT_IDAM_KEY:
-        ROLE_ASSIGNMENT_TOKEN_SECRET:
+        LD_SDK_KEY: sdk-1be5f18b-59fd-4575-aa77-908bf0ecceab
         ROLE_ASSIGNMENT_S2S_AUTHORISED_SERVICES: ccd_gw,am_role_assignment_service
         IDAM_USER_URL: http://idam-api:5000
         IDAM_S2S_URL: http://service-auth-provider-api:8080
@@ -26,7 +25,8 @@ services:
         IDAM_CLIENT_SECRET: am_docker_secret
         IDAM_ADMIN_USERID: ras.admin@hmcts.net
         IDAM_ADMIN_PASSWORD: Pa55word11
-        IDAM_ADMIN_SCOPE: manage-user
+        IDAM_ADMIN_SCOPE: search-user
+        CCD_DATA_STORE_URL: http://ccd-data-store-api:4452
         AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY:
         REFORM_SERVICE_NAME: am-role-assignment-service
         REFORM_TEAM: am
@@ -56,10 +56,11 @@ services:
     environment:
       SERVER_PORT: 8080
       JWT_KEY: wThK0f0/lh3FlxFcL4xUWDMI5C1J9KyQBgXV4wseh1e5J1uYJIjvTvArHxQDrYoHJ23xFxjHkOnvNbR5dXRoxA==
-      MICROSERVICEKEYS_CCD_DATA: "${IDAM_KEY_CCD_DATA_STORE}"
-      MICROSERVICEKEYS_CCD_GW: "${IDAM_KEY_CCD_GATEWAY}"
       MICROSERVICEKEYS_AM_ROLE_ASSIGNMENT_SERVICE: "AAAAAAAAAAAAAAAA"
       MICROSERVICEKEYS_AM_ORG_ROLE_MAPPING_SERVICE: "AAAAAAAAAAAAAAAA"
+      MICROSERVICEKEYS_CCD_DATA: "${IDAM_KEY_CCD_DATA_STORE}"
+      MICROSERVICEKEYS_CCD_GW: "${IDAM_KEY_CCD_GATEWAY}"
+      MICROSERVICEKEYS_CCD_DEFINITION: "${IDAM_KEY_CCD_DEFINITION_STORE}"
       TESTING_SUPPORT_ENABLED: "true"
     networks:
       - am-network
