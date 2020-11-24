@@ -15,13 +15,6 @@ services:
       IDAM_S2S_URL: http://service-auth-provider-api:8080
       OPEN_ID_API_BASE_URI: http://idam-api:5000/o
       OIDC_ISSUER_URL: http://idam-api:8080/openam/oauth2/hmcts
-      ORG_ROLE_MAPPING_IDAM_CLIENT_ID: am_docker
-      ORG_ROLE_MAPPING_IDAM_CLIENT_SECRET: am_docker_secret
-      ORG_ROLE_MAPPING_IDAM_ADMIN_USERID: orm.admin@hmcts.NET
-      ORG_ROLE_MAPPING_IDAM_ADMIN_PASSWORD: Pa55word11
-      ORG_ROLE_MAPPING_IDAM_ADMIN_SCOPE: openid profile roles authorities
-      CASE_WORKER_REF_APP_URL: http://localhost:4099
-      ROLE_ASSIGNMENT_APP_URL: http://localhost:4096
       AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY:
       REFORM_SERVICE_NAME: am-org-role-mapping-service
       REFORM_TEAM: am
