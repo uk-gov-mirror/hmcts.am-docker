@@ -15,7 +15,7 @@ services:
         ROLE_ASSIGNMENT_DB_PASSWORD: am
         ROLE_ASSIGNMENT_DB_OPTIONS: ?stringtype=unspecified
         AM_ROLE_ASSIGNMENT_SERVICE_SECRET: AAAAAAAAAAAAAAAA
-        LD_SDK_KEY: sdk-1be5f18b-59fd-4575-aa77-908bf0ecceab
+        LD_SDK_KEY: "${LD_SDK_KEY}"
         ROLE_ASSIGNMENT_S2S_AUTHORISED_SERVICES: ccd_gw,am_role_assignment_service
         IDAM_USER_URL: http://idam-api:5000
         IDAM_S2S_URL: http://service-auth-provider-api:8080
