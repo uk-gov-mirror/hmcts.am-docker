@@ -2,13 +2,8 @@
 
 - [Prerequisites](#prerequisites)
 - [Quick start](#quick-start)
+- [Setting up env variable](#setting-up-environment-variables)
 - [Using AM](#using-am)
-- [Idam Stub](#idam-stub)
-- [Compose branches](#compose-branches)
-- [Compose projects](#compose-projects)
-- [Under the hood](#under-the-hood-speedboat)
-- [Containers](#containers)
-- [Local development](#local-development)
 - [Troubleshooting](#troubleshooting)
 - [Variables](#variables)
 - [Remarks](#remarks)
@@ -16,9 +11,8 @@
 
 ## Prerequisites
 
-- [Docker](https://www.docker.com)
-
-*Memory and CPU allocations may need to be increased for successful execution of am applications altogether. (On Preferences / Advanced)*
+- [Docker](https://www.docker.com) - Memory and CPU allocations may need to be increased for successful execution of am applications altogether.
+ Minimum RAM required 6GB and if ccd-data-store.yml enabled then minimum 8GB *
 
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) - minimum version 2.0.57 
 - [jq Json Processor] (https://stedolan.github.io/jq)
@@ -84,80 +78,122 @@ A prefix 'export' will be required for each of environment variable.
 
 ## Using AM
 
-There are 6 more steps required to correctly configure SIDAM and AM before it can be used:
+There are following steps required to correctly configure SIDAM and AM apps before it can be used:
 
-### 1. Configure Oauth2 Client of AM docker on SIDAM
+---
+**NOTE**
 
-An oauth2 client should be configured for am-docker application, on SIDAM Web Admin.
-You need to login to the SIDAM Web Admin with the URL and logic credentials here: 
+The `idam-api` container can be slow to start - both the `role-assignment-service` and `ccd-data-store-api` containers will
+try to connect to the `idam-api` container when they start.
 
-http://localhost:8082/login
-For more details refer : https://tools.hmcts.net/confluence/x/eQP3P
-
-Navigate to Home > Manage Services > Add a new Service
-
-On the **Add Service** screen the following fields are required:
-```
-label : am_docker
-description : am_docker
-client_id : am_docker
-client_secret : am_docker_secret
-scope : openid profile roles authorities email search-user
-new redirect_uri (click 'Add URI' before saving) : http://localhost:4096/oauth2redirect
-```
-### 2. Create Idam roles
-After defining the above client/service, the following roles must be defined under this client/service (Home > Manage Roles > select your service > Role Label)
-(some of these roles are used in the automated functional test):
-
-    * am-import
-    * caseworker
-
-Don't worry about the *Assignable roles* section when adding roles
-
-Once the roles are defined under the client/service, go to the service configuration for the service you created in Step 1 (Home > Manage Services > select your service) and select `am-import` role radio option under **Private Beta Role** section
- 
-**Any business-related roles like `caseworker`,`caseworker-<jurisdiction>` etc to be used in AM later must also be defined under the client configuration at this stage.**
-
-### 3. Create users and roles
-
-#### 3.1 Automated creation
-
-A script is provided that sets up some initial users and roles for running functional tests. Execute the following:
+If `idam-api` is not up and running and accepting connections
+you may see errors in the `role-assignment-service` and `ccd-data-store-api` containers, such as
 
 ```bash
-./bin/create-initial-roles-and-users.sh
+Caused by: org.springframework.web.client.ResourceAccessException: 
+    I/O error on GET request for "http://idam-api:5000/o/.well-known/openid-configuration": Connection refused (Connection refused);
+        nested exception is java.net.ConnectException: Connection refused (Connection refused)
 ```
 
-#### 3.2 Manual creation
+If you the containers fail to start with these error, ensure `idam-api` is running using
 
-##### 3.2.1 Create a Default User with "am-import" Role
+ ```bash
+curl http://localhost:5000/health
+ ```
 
-A user with import role should be created using the following command:
+ensuring the response is 
 
 ```bash
-./bin/idam-create-caseworker.sh am-import am.docker.default@hmcts.net Pa55word11 Default AM_Docker
+{"status":"UP"}
 ```
 
-This call will create a user in SIDAM with am-import role. This user will be used to acquire a user token with "am-import" role.
-
-
-##### 3.2.3 Add Initial Case Worker Users
-
-A caseworker user can be created in IDAM using the following command:
+Then restart the `definition-store-api` & `data-store-api` containers
 
 ```bash
-./bin/idam-create-caseworker.sh <roles> <email> [password] [surname] [forename]
+./ccd compose restart ccd-definition-store-api ccd-data-store-api
+```
+---
+
+However, some more steps are required to correctly configure SIDAM and AM before it can be used:
+
+---
+**NOTE**
+
+All scripts require the following environment variables to be set
+
+```bash
+IDAM_ADMIN_USER
+IDAM_ADMIN_PASSWORD
+```
+
+with the corresponding values from the confluence page at https://tools.hmcts.net/confluence/x/eQP3P
+
+*********
+At this point most users can run the single script 
+
+```bash
+./bin/setup.sh
+```
+
+to get their IDAM environment ready and then move on to the [Ready for take-off](###Ready-for-take-off) section.
+
+
+### 4 Ready for take-off 🛫
+
+you can now check the role-assignment-service health is up: [http://localhost:4096](http://localhost:4096)
+
+To invoke any role-assignment-service API using postman, it requires service and user token which can be retrieved as follows:
+
+#### 4.1 Create Service Token
+A service token can be created using the following command:
+
+```bash
+./bin/idam-service-token.sh <microservice>
 ```
 
 Parameters:
-- `roles`: a comma-separated list of roles. Roles must be existing IDAM roles for the am domain. Every caseworker requires at least it's coarse-grained jurisdiction role (`caseworker-<jurisdiction>`).
-- `email`: Email address used for logging in.
-- `password`: Optional. Password for logging in. Defaults to `Pa55word11`. Weak passwords that do not match the password criteria by SIDAM will cause use creation to fail, and such failure may not be expressly communicated to the user. 
+- `microservice`: Name of the microservice which is registered at `service-auth-provider-api`. 
+Default to `ccd_gw`.
 
 For example:
 
 ```bash
-./bin/idam-create-caseworker.sh caseworker-probate,caseworker-probate-solicitor probate@hmcts.net
+./bin/idam-service-token.sh am_role_assignment_service
+```
+
+#### 4.2 Create User Token
+A user token can be created using the following command:
+
+```bash
+./bin/openid-connect-idam-user-token.sh.sh <user-email> <password>
+```
+
+Parameters:
+- `email`: Email address used for logging in. Default to `am.docker.default@hmcts.net`.
+- `password`: Optional. Password for logging in. Defaults to `Pa55word11`. Weak passwords that do not match the password criteria by SIDAM will cause user creation to fail, and such failure may not be expressly communicated to the user. 
+
+For example:
+
+```bash
+./bin/idam-service-token.sh am_role_assignment_service
+```
+
+#### 4.3 Get IDAM User Id
+For some API it is important to know the user-id of the invoking IDAM user. 
+This can be retrieved using the following command:
+
+```bash
+./bin/idam-get-user-info.sh.sh <user-email> <password>
+```
+
+Parameters:
+- `email`: Email address used for logging in. Default to `am.docker.default@hmcts.net`.
+- `password`: Optional. Password for logging in. Defaults to `Pa55word11`. Weak passwords that do not match the password criteria by SIDAM will cause user creation to fail, and such failure may not be expressly communicated to the user. 
+
+For example:
+
+```bash
+./bin/idam-get-user-info.sh TEST_AM_USER1_BEFTA@test.local Pa55word11
 ```
 
 ## Compose projects
@@ -171,39 +207,6 @@ By default, `am-docker` runs the most commonly used backend project required:
 
 Optional compose files will allow other projects to be enabled on demand using the `enable` and `disable` commands.
 
-## Under the hood :speedboat:
-
-### Set
-
-#### Non-`master` branches
-
-When switching to a branch with the `set` command, the following actions take place:
-
-1. The given branch is cloned in the temporary `.workspace` folder
-2. If required, the project is built
-3. A docker image is built
-4. The Docker image is tagged as `hmcts/<project>:<branch>-<git hash>`
-5. An entry is added to file `.tags.env` exporting an environment variable `<PROJECT>_TAG` with a value `<branch>-<git hash>` matching the Docker image tag
-
-The `.tags.env` file is sourced whenever the `am compose` command is used and allows to override the Docker images version used in the Docker compose files.
-
-Hence, to make that change effective, the containers must be updated using `./am compose up`.
-
-#### `master` branch
-
-When switching a project to `master` branch, the branch override is removed using the `unset` command detailed below.
-
-### Unset
-
-Given a list of 1 or more projects, for each project:
-
-1. If `.tags.env` contains an entry for the project, the entry is removed
-
-Similarly to when branches are set, for a change to `.tags.env` to be applied, the containers must be updated using `./am compose up`.
-
-### Status
-
-Retrieve from `.tags.env` the branches and compose files currently enabled and display them.
 
 ### Compose
 
@@ -309,73 +312,15 @@ The `SERVICE_SECRET` must then also be provided to the container running the mic
 
 :information_source: *To prevent duplication, the client secret should be defined in the `.env` file and then used in the compose files using string interpolation `"${<VARIABLE_NAME>}"`.*
 
-## Containers
-
-### Back-end
+## App Containers
 
 #### am-role-assignment-service
 
 It stores all the local role and validations rules on the basis of which multiple role assignments are granted/revoked.
 
-
-## Local development
-
-The provided Docker compose files can be used to get up and running for local development.
-
-However, while working, it is more convenient to run a project directly on the localhost rather than having to rebuild a docker image and a container.
-This means mixing a locally-run project, the one being worked on, with projects running in Docker containers.
-
-Given their unique configuration and dependencies, the way to achieve this varies slightly from one project to the other.
-
-Here's the overall approach:
-
-### 1. Update containers to point to local project
-
-As is, the containers are configured to use one another.
-Thus, the first step to replace a container by a locally running instance is to update all references to this container in the compose files.
-
-For instances, to use a local data store, references in `am-api-gateway` service (file `compose/frontend.yml`) must be changed from:
-
-```yml
-PROXY_AGGREGATED: http://am-role-assignment-service:4096
-PROXY_DATA: http://am-role-assignment-service:4096
-```
-
-to, for Mac OS:
-
-```yml
-PROXY_AGGREGATED: http://docker.for.mac.localhost:4096
-PROXY_DATA: http://docker.for.mac.localhost:4096
-```
-
-or to, for Windows:
-
-```yml
-PROXY_AGGREGATED: http://docker.for.win.localhost:4096
-PROXY_DATA: http://docker.for.win.localhost:4096
-```
-
-The `docker.for.mac.localhost` and `docker.for.win.localhost` hostnames point to the host computer (your localhost running Docker).
-
-For other systems, the host IP address could be used.
-
-Once the compose files have been updated, the new configuration can be applied by running:
-
-```
-./am compose up -d
-```
-
-### 2. Configure local project to use containers
-
-The local project properties must be reviewed to use the containers and comply to their configuration.
-
-Mainly, this means:
-- **Database**: pointing to the locally exposed port for the associated DB. This port used to be 5000 but has been changed to 5050 after SIDAM integration, which came to use 5000 for sidam-api application.
-- **SIDAM**: pointing to the locally exposed port for SIDAM
-- **S2S**:
-  - pointing to the locally exposed port for `service-auth-provider-api`
-  - :warning: using the right key, as defined in `service-auth-provider-api` container
-- **URLs**: all URLs should be updated to point to the corresponding locally exposed port
+#### am-org-role-mapping-service
+Development-in-progress:
+It fetches all the updated user profiles from reference data and map them to appropriate role assignments.
 
 ### Azure Authentication for pulling latest docker images
 
@@ -424,22 +369,6 @@ am-network could not be found error:
 - if you get "am: ERROR: Network am-network declared as external, but could not be found. Please create the network manually using docker network create am-network"
     > ./am init
 
-am UI not loading:
-
-- it might take few minutes for all the services to startup
-    > wait few minutes and then retry accessing am UI
-- sometimes happens that some of the back-ends (data store, definition store, user profile) cannot startup because the database liquibase lock is stuck.
-    > check on the back-end log if there's the following exception: 'liquibase.exception.LockException: Could not acquire change log lock'
-    Execute the following command on the database:
-    UPDATE DATABASECHANGELOGLOCK SET LOCKED=FALSE, LOCKGRANTED=null, LOCKEDBY=null where ID=1;
-- it's possible that some of the services cannot start or crash because of lack of availabel memory. This especially when starting Idam and or ElasticSearch
-    > give more memory to Docker. Configurable under Preferences -> Advanced
-
-DM Store issues:
-
-- "uk.gov.hmcts.dm.exception.AppConfigurationException: Cloub Blob Container does not exist"
-    > ./bin/document-management-store-create-blob-store-container.sh
-
 ## Variables
 Here are the important variables exposed in the compose files:
 
@@ -449,29 +378,6 @@ Here are the important variables exposed in the compose files:
 | AM_DB_USERNAME | Access Management database username |
 | AM_DB_PASSWORD | Access Management database password |
 
-## Remarks
-
-- A container can be configured to call a localhost host resource with the localhost shortcut added for docker containers recently. However the shortcut must be set according the docker host operating system.
-
-```bash
-# for Mac
-docker.for.mac.localhost
-# for Windows
-docker.for.win.localhost
-```
-
-Remember that once you changed the above for a particular app you have to make sure the container configuration for that app does not try to automatically start the dependency that you have started locally. To do that either comment out the entry for the locally running app from the **depends_on** section of the config or start the app with **--no-deps** flag.
-
-- If you happen to run `docker-compose up` before setting up the environment variables, you will probably get error while starting the DB. In that
-case, clear the containers but also watch out for volumes created to be cleared to get a fresh start since some initialisation scripts don't run if
-you have already existing volume for the container.
-
-```bash
-$ docker volume list
-DRIVER              VOLUME NAME
-
-# better be empty
-```
 
 ## LICENSE
 
