@@ -1,0 +1,76 @@
+---
+version: '2.4'
+#only add required RD services here.
+
+services:
+
+  rd-caseworker-ref-api:
+    image: "hmctspublic.azurecr.io/rd/caseworker-ref-api:latest"
+    container_name: rd-caseworker-ref-api
+    environment:
+        POSTGRES_HOST: am-shared-database
+        POSTGRES_PORT: 5432
+        POSTGRES_DB_NAME: dbrdcaseworker
+        POSTGRES_USERNAME: am
+        POSTGRES_PASSWORD: am
+        S2S_SECRET: AAAAAAAAAAAAAAAA
+        CRD_S2S_AUTHORISED_SERVICES: rd_caseworker_ref_api,rd_professional_api,am_org_role_mapping_service
+        idam_url: http://idam-api:5000
+        S2S_URL: http://service-auth-provider-api:8080
+        IDAM_CLIENT_ID: am_docker
+        IDAM_CLIENT_SECRET: am_docker_secret
+        USER_PROFILE_URL: http://ccd-data-store-api:4452
+        AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY:
+        REFORM_SERVICE_NAME: rd-caseworker-ref-api
+        REFORM_TEAM: rd
+        REFORM_ENVIRONMENT: local
+      # Uncomment this line to enable JVM debugging and uncomment the port mapping below
+      #  JAVA_TOOL_OPTIONS: -XX:InitialRAMPercentage=30.0 -XX:MaxRAMPercentage=65.0 -XX:MinRAMPercentage=30.0 -XX:+UseConcMarkSweepGC -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+    ports:
+      - 8095:8095
+      # Uncomment this and the JAVA_TOOL_OPTIONS flag for JVM debugging
+      #- 5005:5005
+    depends_on:
+      am-shared-database:
+        condition: service_started
+      rd-user-profile-api:
+        condition: service_started
+    networks:
+      - am-network
+
+  rd-user-profile-api:
+    image: "hmctspublic.azurecr.io/rd/user-profile-api:latest"
+    container_name: rd-user-profile-api
+    environment:
+      POSTGRES_HOST: am-shared-database
+      POSTGRES_PORT: 5432
+      POSTGRES_DB_NAME: dbuserprofile
+      POSTGRES_USERNAME: am
+      POSTGRES_PASSWORD: am
+      S2S_SECRET: AAAAAAAAAAAAAAAA
+      PRD_S2S_AUTHORISED_SERVICES: rd_professional_api,rd_user_profile_api,xui_webapp,finrem_payment_service,fpl_case_service,iac,aac_manage_case_assignment,divorce_frontend,rd_caseworker_ref_api
+      idam_url: http://idam-api:5000
+      S2S_URL: http://service-auth-provider-api:8080
+      IDAM_CLIENT_ID: am_docker
+      IDAM_CLIENT_SECRET: am_docker_secret
+      AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY:
+      REFORM_SERVICE_NAME: rd-user-profile-api
+      REFORM_TEAM: rd
+      REFORM_ENVIRONMENT: local
+      # Uncomment this line to enable JVM debugging and uncomment the port mapping below
+      #  JAVA_TOOL_OPTIONS: -XX:InitialRAMPercentage=30.0 -XX:MaxRAMPercentage=65.0 -XX:MinRAMPercentage=30.0 -XX:+UseConcMarkSweepGC -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+    ports:
+      - 8091:8091
+      # Uncomment this and the JAVA_TOOL_OPTIONS flag for JVM debugging
+      #- 5005:5005
+    depends_on:
+      am-shared-database:
+        condition: service_started
+      idam-api:
+        condition: service_started
+    networks:
+      - am-network
+
+networks:
+  am-network:
+    external: true
