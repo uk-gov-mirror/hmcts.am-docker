@@ -2,11 +2,11 @@
 
 # Setup Services
 echo "Setting up Services..."
-#./add-idam-clients.sh
+./add-idam-clients.sh
 
 # Setup Roles
-#echo ""
-#echo "Setting up Roles..."
+echo ""
+echo "Setting up Roles..."
 #./utils/idam-add-role.sh "ccd-import"
 #./utils/idam-add-role.sh "caseworker"
 #./utils/idam-add-role.sh "caseworker-iac"
