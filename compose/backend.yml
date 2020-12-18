@@ -93,6 +93,8 @@ services:
       MICROSERVICEKEYS_CCD_DATA: "${IDAM_KEY_CCD_DATA_STORE}"
       MICROSERVICEKEYS_CCD_GW: "${IDAM_KEY_CCD_GATEWAY}"
       MICROSERVICEKEYS_CCD_DEFINITION: "${IDAM_KEY_CCD_DEFINITION_STORE}"
+      MICROSERVICEKEYS_RD_CASEWORKER_REF_API: "AAAAAAAAAAAAAAAA"
+      MICROSERVICEKEYS_RD_USER_PROFILE_API: "AAAAAAAAAAAAAAAA"
       TESTING_SUPPORT_ENABLED: "true"
     networks:
       - am-network
@@ -113,7 +115,6 @@ services:
 #      - am-docker-am-shared-database-data:/var/lib/postgresql/data
     networks:
       - am-network
-
 
 volumes:
   am-docker-am-shared-database-data:
