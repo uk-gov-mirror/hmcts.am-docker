@@ -13,7 +13,7 @@ psql -v ON_ERROR_STOP=1 --username postgres --set USERNAME=$ROLE_ASSIGNMENT_DB_U
 EOSQL
 
 # Create database for each service
-for service in role_assignment ccd_user_profile ccd_definition ccd_data; do
+for service in role_assignment ccd_user_profile ccd_definition ccd_data dbrdcaseworker dbuserprofile; do
   echo "Database $service: Creating..."
 psql -v ON_ERROR_STOP=1 --username postgres --set USERNAME=$ROLE_ASSIGNMENT_DB_USERNAME --set PASSWORD=$ROLE_ASSIGNMENT_DB_PASSWORD --set DATABASE=$service <<-EOSQL
   CREATE DATABASE :DATABASE
