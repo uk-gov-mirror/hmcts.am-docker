@@ -10,13 +10,18 @@ services:
     environment:
       AM_ROLE_ASSIGNMENT_SERVICE_SECRET: AAAAAAAAAAAAAAAA
       LD_SDK_KEY: "${LD_SDK_KEY}"
-      ROLE_ASSIGNMENT_S2S_AUTHORISED_SERVICES: am_role_assignment_service, am_org_role_mapping_service
+      ROLE_ASSIGNMENT_S2S_AUTHORISED_SERVICES: ccd_gw,am_role_assignment_service, am_org_role_mapping_service
       IDAM_USER_URL: http://idam-api:5000
       IDAM_S2S_URL: http://service-auth-provider-api:8080
       OPEN_ID_API_BASE_URI: http://idam-api:5000/o
       OIDC_ISSUER_URL: http://idam-api:8080/openam/oauth2/hmcts
       AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY:
       REFORM_SERVICE_NAME: am-org-role-mapping-service
+      AMQP_HOST: "${AMQP_HOST}"
+      AMQP_SHARED_ACCESS_KEY_NAME: "${AMQP_SHARED_ACCESS_KEY_NAME}"
+      AMQP_SHARED_ACCESS_KEY_VALUE: "${AMQP_SHARED_ACCESS_KEY_VALUE}"
+      AMQP_TOPIC_NAME: "${AMQP_TOPIC_NAME}"
+      ROLE_ASSIGNMENT_APP_URL: "${ROLE_ASSIGNMENT_URL}"
       REFORM_TEAM: am
       REFORM_ENVIRONMENT: local
       # Uncomment this line to enable JVM debugging and uncomment the port mapping below
@@ -48,7 +53,7 @@ services:
         ROLE_ASSIGNMENT_DB_OPTIONS: ?stringtype=unspecified
         AM_ROLE_ASSIGNMENT_SERVICE_SECRET: AAAAAAAAAAAAAAAA
         LD_SDK_KEY: "${LD_SDK_KEY}"
-        ROLE_ASSIGNMENT_S2S_AUTHORISED_SERVICES: ccd_gw,am_role_assignment_service
+        ROLE_ASSIGNMENT_S2S_AUTHORISED_SERVICES: ccd_gw,am_role_assignment_service,am_org_role_mapping_service
         IDAM_USER_URL: http://idam-api:5000
         IDAM_S2S_URL: http://service-auth-provider-api:8080
         OPEN_ID_API_BASE_URI: http://idam-api:5000/o
