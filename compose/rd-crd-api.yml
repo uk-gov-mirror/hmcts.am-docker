@@ -5,7 +5,7 @@ version: '2.4'
 services:
 
   rd-caseworker-ref-api:
-    image: "hmctspublic.azurecr.io/rd/caseworker-ref-api:latest"
+    image: "hmctspublic.azurecr.io/rd/caseworker-ref-api:pr-112"
     container_name: rd-caseworker-ref-api
     environment:
         POSTGRES_HOST: am-shared-database
@@ -18,8 +18,10 @@ services:
         idam_url: http://idam-api:5000
         S2S_URL: http://service-auth-provider-api:8080
         IDAM_CLIENT_ID: am_docker
-        IDAM_CLIENT_SECRET: am_docker_secret
-        USER_PROFILE_URL: http://ccd-data-store-api:4452
+        USER_PROFILE_URL: http://rd-user-profile-api:8091
+        OPEN_ID_API_BASE_URI: http://idam-api:5000/o
+        OIDC_ISSUER_URL: http://idam-api:8080/openam/oauth2/hmcts
+        RD_LD_SDK_KEY: "${RD_LD_SDK_KEY}"
         AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY:
         REFORM_SERVICE_NAME: rd-caseworker-ref-api
         REFORM_TEAM: rd
@@ -39,7 +41,7 @@ services:
       - am-network
 
   rd-user-profile-api:
-    image: "hmctspublic.azurecr.io/rd/user-profile-api:latest"
+    image: "hmcts/rd-user-profile-api"
     container_name: rd-user-profile-api
     environment:
       POSTGRES_HOST: am-shared-database
@@ -52,7 +54,8 @@ services:
       idam_url: http://idam-api:5000
       S2S_URL: http://service-auth-provider-api:8080
       IDAM_CLIENT_ID: am_docker
-      IDAM_CLIENT_SECRET: am_docker_secret
+      OPEN_ID_API_BASE_URI: http://idam-api:5000/o
+      OIDC_ISSUER_URL: http://idam-api:8080/openam/oauth2/hmcts
       AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY:
       REFORM_SERVICE_NAME: rd-user-profile-api
       REFORM_TEAM: rd
