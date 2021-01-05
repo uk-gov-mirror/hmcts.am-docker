@@ -46,7 +46,7 @@ services:
       - am-network
 
   rd-user-profile-api:
-    image: "hmctspublic.azurecr.io/rd/caseworker-ref-api:pr-607"
+    image: "hmctspublic.azurecr.io/rd/user-profile-api:pr-607"
     container_name: rd-user-profile-api
     environment:
       POSTGRES_HOST: am-shared-database
