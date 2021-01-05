@@ -22,10 +22,11 @@ services:
         OPEN_ID_API_BASE_URI: http://idam-api:5000/o
         OIDC_ISSUER_URL: http://idam-api:8080/openam/oauth2/hmcts
         RD_LD_SDK_KEY: "${RD_LD_SDK_KEY}"
-        CWRD_MQ_HOST: "rd-servicebus-sandbox.servicebus.windows.net"
+        LAUNCH_DARKLY_ENV: preview
+        CWRD_MQ_HOST: rd-servicebus-sandbox.servicebus.windows.net
         CWRD_MQ_USERNAME: "${AMQP_SHARED_ACCESS_KEY_NAME}"
         CWRD_MQ_PASSWORD: "${AMQP_SHARED_ACCESS_KEY_VALUE}"
-        CWRD_MQ_TOPIC_NAME: "rd-caseworker-topic-sandbox"
+        CWRD_MQ_TOPIC_NAME: rd-caseworker-topic-sandbox
         AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY:
         REFORM_SERVICE_NAME: rd-caseworker-ref-api
         REFORM_TEAM: rd
