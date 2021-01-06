@@ -24,7 +24,7 @@ services:
         RD_LD_SDK_KEY: "${RD_LD_SDK_KEY}"
         LAUNCH_DARKLY_ENV: preview
         CWRD_MQ_HOST: rd-servicebus-sandbox.servicebus.windows.net
-        CWRD_MQ_USERNAME: "${AMQP_SHARED_ACCESS_KEY_NAME}"
+        CWRD_MQ_USERNAME: SendAndListenSharedAccessKey
         CWRD_MQ_PASSWORD: "${AMQP_SHARED_ACCESS_KEY_VALUE}"
         CWRD_MQ_TOPIC_NAME: rd-caseworker-topic-sandbox
         AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY:
