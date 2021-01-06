@@ -5,23 +5,25 @@ version: '2.4'
 services:
 
   am-org-role-mapping-service:
-    image: "hmctspublic.azurecr.io/am/org-role-mapping-service:latest"
+    image: "hmctspublic.azurecr.io/am/org-role-mapping-service:pr-57"
     container_name: am-org-role-mapping-service
     environment:
       AM_ROLE_ASSIGNMENT_SERVICE_SECRET: AAAAAAAAAAAAAAAA
       LD_SDK_KEY: "${LD_SDK_KEY}"
-      ROLE_ASSIGNMENT_S2S_AUTHORISED_SERVICES: ccd_gw,am_role_assignment_service, am_org_role_mapping_service
+      ROLE_ASSIGNMENT_S2S_AUTHORISED_SERVICES: ccd_gw,am_role_assignment_service,am_org_role_mapping_service
       IDAM_USER_URL: http://idam-api:5000
       IDAM_S2S_URL: http://service-auth-provider-api:8080
       OPEN_ID_API_BASE_URI: http://idam-api:5000/o
       OIDC_ISSUER_URL: http://idam-api:8080/openam/oauth2/hmcts
       AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY:
       REFORM_SERVICE_NAME: am-org-role-mapping-service
-      AMQP_HOST: "${AMQP_HOST}"
-      AMQP_SHARED_ACCESS_KEY_NAME: "${AMQP_SHARED_ACCESS_KEY_NAME}"
+      AMQP_HOST: rd-servicebus-sandbox.servicebus.windows.net
+      AMQP_SHARED_ACCESS_KEY_NAME: SendAndListenSharedAccessKey
       AMQP_SHARED_ACCESS_KEY_VALUE: "${AMQP_SHARED_ACCESS_KEY_VALUE}"
-      AMQP_TOPIC_NAME: "${AMQP_TOPIC_NAME}"
-      ROLE_ASSIGNMENT_APP_URL: "${ROLE_ASSIGNMENT_URL}"
+      AMQP_TOPIC_NAME: rd-caseworker-topic-sandbox/subscriptions/temporary
+      ORG_ROLE_MAPPING_IDAM_ADMIN_USERID: TEST_AM_USER4_BEFTA@test.local
+      ROLE_ASSIGNMENT_APP_URL: http://am-role-assignment-service:4096
+      CASE_WORKER_REF_APP_URL: http://rd-caseworker-ref-api:8095
       REFORM_TEAM: am
       REFORM_ENVIRONMENT: local
       # Uncomment this line to enable JVM debugging and uncomment the port mapping below
@@ -98,6 +100,8 @@ services:
       MICROSERVICEKEYS_CCD_DATA: "${IDAM_KEY_CCD_DATA_STORE}"
       MICROSERVICEKEYS_CCD_GW: "${IDAM_KEY_CCD_GATEWAY}"
       MICROSERVICEKEYS_CCD_DEFINITION: "${IDAM_KEY_CCD_DEFINITION_STORE}"
+      MICROSERVICEKEYS_RD_CASEWORKER_REF_API: "AAAAAAAAAAAAAAAA"
+      MICROSERVICEKEYS_RD_USER_PROFILE_API: "AAAAAAAAAAAAAAAA"
       TESTING_SUPPORT_ENABLED: "true"
     networks:
       - am-network
@@ -118,7 +122,6 @@ services:
 #      - am-docker-am-shared-database-data:/var/lib/postgresql/data
     networks:
       - am-network
-
 
 volumes:
   am-docker-am-shared-database-data:
