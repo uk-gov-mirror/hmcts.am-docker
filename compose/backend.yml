@@ -18,7 +18,7 @@ services:
       AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY:
       REFORM_SERVICE_NAME: am-org-role-mapping-service
       AMQP_HOST: rd-servicebus-sandbox.servicebus.windows.net
-      AMQP_SHARED_ACCESS_KEY_NAME: "${AMQP_SHARED_ACCESS_KEY_NAME}"
+      AMQP_SHARED_ACCESS_KEY_NAME: SendAndListenSharedAccessKey
       AMQP_SHARED_ACCESS_KEY_VALUE: "${AMQP_SHARED_ACCESS_KEY_VALUE}"
       AMQP_TOPIC_NAME: rd-caseworker-topic-sandbox/subscriptions/temporary
       ORG_ROLE_MAPPING_IDAM_ADMIN_USERID: TEST_AM_USER4_BEFTA@test.local
