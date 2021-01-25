@@ -5,7 +5,7 @@ version: '2.4'
 services:
 
   rd-caseworker-ref-api:
-    image: "hmctspublic.azurecr.io/rd/caseworker-ref-api:pr-112"
+    image: "hmctspublic.azurecr.io/rd/caseworker-ref-api:latest"
     container_name: rd-caseworker-ref-api
     environment:
         POSTGRES_HOST: am-shared-database
@@ -46,7 +46,7 @@ services:
       - am-network
 
   rd-user-profile-api:
-    image: "hmctspublic.azurecr.io/rd/user-profile-api:pr-607"
+    image: "hmctspublic.azurecr.io/rd/user-profile-api:latest"
     container_name: rd-user-profile-api
     environment:
       POSTGRES_HOST: am-shared-database
