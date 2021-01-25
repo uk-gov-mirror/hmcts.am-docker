@@ -5,7 +5,7 @@ version: '2.4'
 services:
 
   am-org-role-mapping-service:
-    image: "hmctspublic.azurecr.io/am/org-role-mapping-service:pr-57"
+    image: "hmctspublic.azurecr.io/am/org-role-mapping-service:latest"
     container_name: am-org-role-mapping-service
     environment:
       AM_ROLE_ASSIGNMENT_SERVICE_SECRET: AAAAAAAAAAAAAAAA
