@@ -13,6 +13,7 @@ echo "Setting up Roles..."
 #./utils/idam-add-role.sh "cwd-admin"
 #./utils/idam-add-role.sh "cwd-user"
 #./utils/idam-add-role.sh "caseworker-iac-bulkscan"
+#./utils/idam-add-role.sh "cwd-system-user"
 
 ### Setup Users
 echo ""
@@ -26,3 +27,5 @@ echo "Setting up Users..."
 ./create-user.sh "TEST_AM_USER3_BEFTA@test.local" "testfirstname" "testsurname" "Pa55word11" "test" "[{ \"code\": \"caseworker\"}]"
 ./create-user.sh "TEST_AM_USER4_BEFTA@test.local" "testfirstname" "testsurname" "Pa55word11" "test" "[{ \"code\": \"caseworker\"}, { \"code\": \"cwd-admin\"}]"
 ./create-user.sh "TEST_AM_USER5_BEFTA@test.local" "testfirstname" "testsurname" "Pa55word11" "test" "[{ \"code\": \"caseworker\"}, { \"code\": \"cwd-user\"}, { \"code\": \"caseworker-iac-bulkscan\"}]"
+./create-user.sh "TEST_AM_USER7_BEFTA@test.local" "testfirstname" "testsurname" "Pa55word11" "test" "[{ \"code\": \"caseworker\"}, { \"code\": \"cwd-user\"}, { \"code\": \"cwd-system-user\"}]"
+./create-user.sh "TEST_AM_USER8_BEFTA@test.local" "testfirstname" "testsurname" "Pa55word11" "test" "[{ \"code\": \"caseworker\"}, { \"code\": \"cwd-admin\"}, { \"code\": \"cwd-system-user\"}]"

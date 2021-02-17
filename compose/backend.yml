@@ -20,8 +20,8 @@ services:
       AMQP_HOST: rd-servicebus-sandbox.servicebus.windows.net
       AMQP_SHARED_ACCESS_KEY_NAME: SendAndListenSharedAccessKey
       AMQP_SHARED_ACCESS_KEY_VALUE: "${AMQP_SHARED_ACCESS_KEY_VALUE}"
-      AMQP_TOPIC_NAME: rd-caseworker-topic-sandbox/subscriptions/temporary
-      ORG_ROLE_MAPPING_IDAM_ADMIN_USERID: TEST_AM_USER4_BEFTA@test.local
+      AMQP_TOPIC_NAME: rd-caseworker-topic-sandbox/subscriptions/tempDev
+      ORG_ROLE_MAPPING_IDAM_ADMIN_USERID: TEST_AM_USER7_BEFTA@test.local
       ROLE_ASSIGNMENT_APP_URL: http://am-role-assignment-service:4096
       CASE_WORKER_REF_APP_URL: http://rd-caseworker-ref-api:8095
       REFORM_TEAM: am
@@ -32,6 +32,7 @@ services:
       - 4098:4098
       # Uncomment this and the JAVA_TOOL_OPTIONS flag for JVM debugging
       #- 5005:5005
+    mem_limit: 256m
     depends_on:
       idam-api:
         condition: service_started
@@ -76,6 +77,7 @@ services:
       - 4096:4096
       # Uncomment this and the JAVA_TOOL_OPTIONS flag for JVM debugging
       #- 5005:5005
+    mem_limit: 512m
     depends_on:
       idam-api:
         condition: service_started
@@ -92,6 +94,7 @@ services:
       retries: 10
     ports:
       - 4502:8080
+    mem_limit: 256m
     environment:
       SERVER_PORT: 8080
       JWT_KEY: wThK0f0/lh3FlxFcL4xUWDMI5C1J9KyQBgXV4wseh1e5J1uYJIjvTvArHxQDrYoHJ23xFxjHkOnvNbR5dXRoxA==
@@ -118,6 +121,7 @@ services:
       - POSTGRES_HOST_AUTH_METHOD=trust
     ports:
       - 5451:5432
+    mem_limit: 512m
 #    volumes:
 #      - am-docker-am-shared-database-data:/var/lib/postgresql/data
     networks:

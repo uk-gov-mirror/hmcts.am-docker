@@ -37,6 +37,7 @@ services:
       - 8095:8095
       # Uncomment this and the JAVA_TOOL_OPTIONS flag for JVM debugging
       #- 5005:5005
+    mem_limit: 512m
     depends_on:
       am-shared-database:
         condition: service_started
@@ -55,7 +56,7 @@ services:
       POSTGRES_USERNAME: am
       POSTGRES_PASSWORD: am
       S2S_SECRET: AAAAAAAAAAAAAAAA
-      PRD_S2S_AUTHORISED_SERVICES: rd_professional_api,rd_user_profile_api,xui_webapp,finrem_payment_service,fpl_case_service,iac,aac_manage_case_assignment,divorce_frontend,rd_caseworker_ref_api,am_org_role_mapping_service
+      PRD_S2S_AUTHORISED_SERVICES: rd_professional_api,rd_user_profile_api,xui_webapp,finrem_payment_service,fpl_case_service,iac,aac_manage_case_assignment,divorce_frontend,rd_caseworker_ref_api
       idam_url: http://idam-api:5000
       S2S_URL: http://service-auth-provider-api:8080
       IDAM_CLIENT_ID: am_docker
@@ -71,6 +72,7 @@ services:
       - 8091:8091
       # Uncomment this and the JAVA_TOOL_OPTIONS flag for JVM debugging
       #- 5005:5005
+    mem_limit: 256m
     depends_on:
       am-shared-database:
         condition: service_started
