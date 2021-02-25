@@ -84,6 +84,43 @@ services:
     networks:
       - am-network
 
+
+  am-role-assignment-refresh-batch:
+    image: "hmctspublic.azurecr.io/am/role-assignment-refresh-batch:latest"
+    container_name: am-role-assignment-refresh-batch
+    environment:
+      AM_ROLE_ASSIGNMENT_SERVICE_SECRET: AAAAAAAAAAAAAAAA
+      LD_SDK_KEY: "${LD_SDK_KEY}"
+      ROLE_ASSIGNMENT_S2S_AUTHORISED_SERVICES: ccd_gw,am_role_assignment_service,am_org_role_mapping_service,am_role_assigment_refresh_batch
+      IDAM_USER_URL: http://idam-api:5000
+      IDAM_S2S_URL: http://service-auth-provider-api:8080
+      OPEN_ID_API_BASE_URI: http://idam-api:5000/o
+      OIDC_ISSUER_URL: http://idam-api:8080/openam/oauth2/hmcts
+      IDAM_CLIENT_ID: am_docker
+      IDAM_CLIENT_SECRET: am_docker_secret
+      IDAM_ADMIN_USERID: ras.admin@hmcts.net
+      IDAM_ADMIN_PASSWORD: Pa55word11
+      IDAM_ADMIN_SCOPE: search-user
+      CCD_DATA_STORE_URL: http://ccd-data-store-api:4452
+      AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY:
+      REFORM_SERVICE_NAME: am-role-assignment-refresh-batch
+      REFORM_TEAM: am
+      REFORM_ENVIRONMENT: local
+      # Uncomment this line to enable JVM debugging and uncomment the port mapping below
+      #  JAVA_TOOL_OPTIONS: -XX:InitialRAMPercentage=30.0 -XX:MaxRAMPercentage=65.0 -XX:MinRAMPercentage=30.0 -XX:+UseConcMarkSweepGC -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+    ports:
+      - 5333:5333
+      # Uncomment this and the JAVA_TOOL_OPTIONS flag for JVM debugging
+      #- 5005:5005
+    depends_on:
+      idam-api:
+        condition: service_started
+      am-shared-database:
+        condition: service_started
+    networks:
+      - am-network
+
+
   service-auth-provider-api:
     image: "hmctspublic.azurecr.io/rpe/service-auth-provider:latest"
     healthcheck:
